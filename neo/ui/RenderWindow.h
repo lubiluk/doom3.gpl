@@ -42,7 +42,7 @@ public:
 //  
 	virtual idWinVar *GetWinVarByName(const char *_name, bool winLookup = false, drawWin_t** owner = NULL);
 // 
-	
+    
 private:
 	void CommonInit();
 	virtual bool ParseInternalVar(const char *name, idParser *src);

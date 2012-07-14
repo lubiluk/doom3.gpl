@@ -250,6 +250,8 @@ public:
 
 	idEntityPtr<idWeapon>	weapon;
 	idUserInterface *		hud;				// MP: is NULL if not local player
+    
+    
 	idUserInterface *		objectiveSystem;
 	bool					objectiveSystemOpen;
 

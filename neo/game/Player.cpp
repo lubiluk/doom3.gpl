@@ -965,6 +965,7 @@ idPlayer::idPlayer() {
 	weapon					= NULL;
 
 	hud						= NULL;
+    
 	objectiveSystem			= NULL;
 	objectiveSystemOpen		= false;
 
@@ -1450,6 +1451,7 @@ void idPlayer::Spawn( void ) {
 			hud->Activate( true, gameLocal.time );
 		}
 
+
 		// load cursor
 		if ( spawnArgs.GetString( "cursor", "", temp ) ) {
 			cursor = uiManager->FindGui( temp, true, gameLocal.isMultiplayer, gameLocal.isMultiplayer );
@@ -1460,7 +1462,7 @@ void idPlayer::Spawn( void ) {
 
 		objectiveSystem = uiManager->FindGui( "guis/pda.gui", true, false, true );
 		objectiveSystemOpen = false;
-	}
+    }
 
 	SetLastHitTime( 0 );
 
@@ -1596,6 +1598,9 @@ Release any resources used by the player.
 idPlayer::~idPlayer() {
 	delete weapon.GetEntity();
 	weapon = NULL;
+    
+    // emote
+    hud->EmoteShutdown();
 }
 
 /*
@@ -2055,6 +2060,9 @@ void idPlayer::Restore( idRestoreGame *savefile ) {
 
 	// create combat collision hull for exact collision detection
 	SetCombatModel();
+    
+    // emote
+    hud->EmoteInit();
 }
 
 /*
@@ -2616,6 +2624,10 @@ void idPlayer::DrawHUD( idUserInterface *_hud ) {
 	weapon.GetEntity()->UpdateGUI();
 
 	_hud->Redraw( gameLocal.realClientTime );
+    
+    // emote
+    _hud->EmoteRedraw(gameLocal.realClientTime);
+    
 
 	// weapon targeting crosshair
 	if ( !GuiActive() ) {

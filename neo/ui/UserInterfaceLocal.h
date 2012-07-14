@@ -91,6 +91,12 @@ public:
 	idStr						&GetPendingCmd() { return pendingCmd; };
 	idStr						&GetReturnCmd() { return returnCmd; };
 
+    
+    // emote
+    void                        EmoteInit(void);
+    void                        EmoteShutdown(void);
+    void                        EmoteRedraw(int time);
+    
 private:
 	bool						active;
 	bool						loading;
@@ -113,6 +119,10 @@ private:
 	int							time;
 
 	int							refs;
+    
+    // emote
+    bool                        emote;
+    const idMaterial *          emotionalImage;
 };
 
 class idUserInterfaceManagerLocal : public idUserInterfaceManager {
@@ -144,3 +154,4 @@ private:
 	idList<idUserInterfaceLocal*> demoGuis;
 
 };
+

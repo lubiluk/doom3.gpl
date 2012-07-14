@@ -508,8 +508,6 @@ public:
 	void				PlaySound(const char* sound);
 
 
-
-
 	static idRandom		random;	
 	int					ssdTime;
 	

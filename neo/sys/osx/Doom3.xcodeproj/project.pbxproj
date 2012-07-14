@@ -240,6 +240,7 @@
 		8D11072A0486CEB800E47090 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 29B97318FDCFA39411CA2CEA /* MainMenu.nib */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		93715DA0153ED70000B075C5 /* libEmote.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 93715D9D153ED65300B075C5 /* libEmote.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -298,6 +299,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC0620554660B00DB518D;
 			remoteInfo = game;
+		};
+		93715D9C153ED65300B075C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93715D95153ED65300B075C5 /* Emote.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 933CA0E21502519100A0C530;
+			remoteInfo = Emote;
+		};
+		93715D9E153ED6F800B075C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93715D95153ED65300B075C5 /* Emote.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 933CA0E11502519100A0C530;
+			remoteInfo = Emote;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -665,6 +680,7 @@
 		81C40E18147D167D007C2D25 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Doom 3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Doom 3.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		93715D95153ED65300B075C5 /* Emote.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Emote.xcodeproj; path = ../../../../Emote/Emote.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -672,6 +688,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93715DA0153ED70000B075C5 /* libEmote.dylib in Frameworks */,
 				81C9144F1481943700DD2086 /* game.dylib in Frameworks */,
 				81C914501481943700DD2086 /* libidlib_pic.a in Frameworks */,
 				8170F46A1480ABA5009E1EC8 /* libcurl.dylib in Frameworks */,
@@ -726,6 +743,7 @@
 		29B97314FDCFA39411CA2CEA /* Doom3 */ = {
 			isa = PBXGroup;
 			children = (
+				93715D95153ED65300B075C5 /* Emote.xcodeproj */,
 				25DD882E0B31F5F00079B759 /* d3xp.xcodeproj */,
 				812256420912BC26005D34B9 /* Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -1301,6 +1319,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		93715D96153ED65300B075C5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93715D9D153ED65300B075C5 /* libEmote.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1315,6 +1341,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				93715D9F153ED6F800B075C5 /* PBXTargetDependency */,
 				812259840912BF2B005D34B9 /* PBXTargetDependency */,
 				812259910912BF43005D34B9 /* PBXTargetDependency */,
 				81225B8D0912C73C005D34B9 /* PBXTargetDependency */,
@@ -1350,6 +1377,10 @@
 				{
 					ProductGroup = 25DD882F0B31F5F00079B759 /* Products */;
 					ProjectRef = 25DD882E0B31F5F00079B759 /* d3xp.xcodeproj */;
+				},
+				{
+					ProductGroup = 93715D96153ED65300B075C5 /* Products */;
+					ProjectRef = 93715D95153ED65300B075C5 /* Emote.xcodeproj */;
 				},
 				{
 					ProductGroup = 81225B850912C731005D34B9 /* Products */;
@@ -1405,6 +1436,13 @@
 			fileType = "compiled.mach-o.dylib";
 			path = game.dylib;
 			remoteRef = 81225B8A0912C731005D34B9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		93715D9D153ED65300B075C5 /* libEmote.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libEmote.dylib;
+			remoteRef = 93715D9C153ED65300B075C5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1667,6 +1705,11 @@
 			name = game;
 			targetProxy = 81225B8C0912C73C005D34B9 /* PBXContainerItemProxy */;
 		};
+		93715D9F153ED6F800B075C5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Emote;
+			targetProxy = 93715D9E153ED6F800B075C5 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1810,6 +1853,7 @@
 					"-fpermissive",
 				);
 				SDKROOT = macosx10.6;
+				USER_HEADER_SEARCH_PATHS = ../../../../Emote/src;
 				VALID_ARCHS = i386;
 			};
 			name = Debug;
@@ -1839,6 +1883,7 @@
 					"-fno-common",
 				);
 				SDKROOT = macosx10.6;
+				USER_HEADER_SEARCH_PATHS = ../../../../Emote/src;
 				VALID_ARCHS = i386;
 			};
 			name = Release;

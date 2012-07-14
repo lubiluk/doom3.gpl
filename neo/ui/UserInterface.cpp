@@ -34,6 +34,10 @@ If you have questions concerning this license or the applicable additional terms
 #include "Window.h"
 #include "UserInterfaceLocal.h"
 
+// emote
+#include "Emote.h"
+
+
 extern idCVar r_skipGuiShaders;		// 1 = don't render any gui elements on surfaces
 
 idUserInterfaceManagerLocal	uiManagerLocal;
@@ -244,6 +248,9 @@ idUserInterfaceLocal::idUserInterfaceLocal() {
 	//so the reg eval in gui parsing doesn't get bogus values
 	time = 0;
 	refs = 1;
+    
+    // emote
+    emote = false;
 }
 
 idUserInterfaceLocal::~idUserInterfaceLocal() {
@@ -373,6 +380,7 @@ void idUserInterfaceLocal::Redraw( int _time ) {
 		time = _time;
 		uiManagerLocal.dc.PushClipRect( uiManagerLocal.screenRect );
 		desktop->Redraw( 0, 0 );
+        
 		uiManagerLocal.dc.PopClipRect();
 	}
 }
@@ -638,3 +646,106 @@ void idUserInterfaceLocal::SetCursor( float x, float y ) {
 	cursorY = y;
 }
 
+
+// emote
+
+void idUserInterfaceLocal::EmoteInit(void) {
+    emote = true;
+    emotionalImage = declManager->FindMaterial("emote/emotional.tga");
+    //emotionalImage = declManager->FindMaterial("emote/emotional.pcx");
+    
+    if (Emote_init() == 0) {
+        common->Printf("EMOTE: Init Success\n");
+        
+        Emote_setHistoryLength(20);
+        
+        Emote_startMonitoring();
+    } else {
+        common->Printf("EMOTE: Init fail\n");
+        Emote_printErrorMessage();
+    }
+}
+
+void idUserInterfaceLocal::EmoteShutdown(void) {
+    Emote_stopMonitoring();
+    Emote_shutdown();
+    
+    emote = false;
+    common->Printf("EMOTE: Destroyed emote interface\n");
+}
+
+void idUserInterfaceLocal::EmoteRedraw(int time) {
+    if (!emote) {
+        return;
+    }
+    
+    char pulseStr[255];
+    int heartRate = Emote_getHeartRate();
+    float stress = Emote_getStressLevel();
+    int reference = Emote_getReferenceHeartRate();
+    float avg = Emote_getAverageHeartRate();
+    
+    // emotional image
+    uiManagerLocal.dc.DrawMaterial(0.f, 0.f, SCREEN_WIDTH, SCREEN_HEIGHT, emotionalImage, idVec4(1.0f, 1.0f, 1.0f, stress));
+    
+    
+    // text
+    sprintf(pulseStr, "HR: %d", heartRate);
+    uiManagerLocal.dc.DrawText(pulseStr, 0.3, 0, idVec4(1, 0, 0, 1), idRectangle(5.f, 1.f, 100.f, 50.f), false);
+    
+    sprintf(pulseStr, "Ref: %d", reference);
+    uiManagerLocal.dc.DrawText(pulseStr, 0.3, 0, idVec4(1, 0, 0, 1), idRectangle(120.f, 1.f, 100.f, 50.f), false);
+    
+    sprintf(pulseStr, "Avg: %.1f", avg);
+    uiManagerLocal.dc.DrawText(pulseStr, 0.3, 0, idVec4(1, 0, 0, 1), idRectangle(240.f, 1.f, 100.f, 50.f), false);
+    
+    sprintf(pulseStr, "Stress: %.2f", stress);
+    uiManagerLocal.dc.DrawText(pulseStr, 0.3, 0, idVec4(1, 0, 0, 1), idRectangle(360.f, 1.f, 100.f, 50.f), false);
+    
+    // chart
+    static const int maxBelievable = 110;
+    static const int minBelievable = 50;
+    
+    static const float chartWidth = 100.f;
+    static const float chartHeight = 50.f;
+    static float lineWidth = chartWidth / 20.f;
+    static float topPulse = 90.f;
+    static float bottomPulse = 60.f;
+    
+    if (heartRate < bottomPulse) {
+        if (heartRate >= minBelievable) {
+            bottomPulse = heartRate - 2.f;
+        } else {
+            heartRate = bottomPulse;
+        }
+    } else if (heartRate > topPulse) {
+        if (heartRate <= maxBelievable) {
+            topPulse = heartRate + 2.f;
+        } else {
+            heartRate = topPulse;
+        }
+    }
+    
+    uiManagerLocal.dc.DrawRect(5.f, 24.f, chartWidth, chartHeight + 2.f, 1.f, idVec4(1.f, 0.f, 0.f, 1.f));
+    
+    for (int i = 0; i < 20; i++) {
+        char pulseStr[10];
+        int pulse = Emote_getHistory(i);
+        
+        if (pulse < minBelievable) {
+            pulse = bottomPulse;
+        } else if(pulse > maxBelievable) {
+            pulse = topPulse;
+        }
+        
+        sprintf(pulseStr, "%d", pulse);
+        
+        float pulseY = chartHeight - (float(pulse) - bottomPulse) / (topPulse - bottomPulse) * chartHeight;
+        uiManagerLocal.dc.DrawFilledRect(5.f + i * lineWidth, 25.f + pulseY, lineWidth, 1.f, idVec4(1.f, 0.f, 0.f, 1.f));
+        
+//        uiManagerLocal.dc.DrawText(pulseStr, 0.3, 0, idVec4(1, 0, 0, 1), idRectangle(0 + i * 40, 80, 20, 20), false);
+        
+//        sprintf(pulseStr, "%f", pulseY);
+//        uiManagerLocal.dc.DrawText(pulseStr, 0.3, 0, idVec4(1, 0, 0, 1), idRectangle(0 + i * 40, 40, 20, 20), false);
+    }
+}

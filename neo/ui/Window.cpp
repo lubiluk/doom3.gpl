@@ -40,6 +40,7 @@ If you have questions concerning this license or the applicable additional terms
 #include "RenderWindow.h"
 #include "MarkerWindow.h"
 #include "FieldWindow.h"
+#include <typeinfo>
 
 #include "GameSSDWindow.h"
 #include "GameBearShootWindow.h"
@@ -324,6 +325,7 @@ void idWindow::Draw( int time, float x, float y ) {
 	if ( text.Length() == 0 ) {
 		return;
 	}
+    
 	if ( textShadow ) {
 		idStr shadowText = text;
 		idRectangle shadowRect = textRect;
@@ -1193,7 +1195,7 @@ idWindow::Redraw
 */
 void idWindow::Redraw(float x, float y) {
 	idStr str;
-
+    
 	if (r_skipGuiShaders.GetInteger() == 1 || dc == NULL ) {
 		return;
 	}

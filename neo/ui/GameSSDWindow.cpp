@@ -2297,3 +2297,4 @@ void idGameSSDWindow::PlaySound(const char* sound) {
 		currentSound = 0;
 	}
 }
+
