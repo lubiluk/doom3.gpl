@@ -251,6 +251,7 @@ idUserInterfaceLocal::idUserInterfaceLocal() {
     
     // emote
     emote = false;
+    emoteHistoryLenght = 0;
 }
 
 idUserInterfaceLocal::~idUserInterfaceLocal() {
@@ -651,15 +652,15 @@ void idUserInterfaceLocal::SetCursor( float x, float y ) {
 
 void idUserInterfaceLocal::EmoteInit(void) {
     emote = true;
+    emoteHistoryLenght = 6;
     emotionalImage = declManager->FindMaterial("emote/emotional.tga");
     //emotionalImage = declManager->FindMaterial("emote/emotional.pcx");
     
     if (Emote_init() == 0) {
         common->Printf("EMOTE: Init Success\n");
-        
-        Emote_setHistoryLength(20);
-        
+        Emote_setHistoryLength(emoteHistoryLenght);
         Emote_startMonitoring();
+        Emote_calibrate();
     } else {
         common->Printf("EMOTE: Init fail\n");
         Emote_printErrorMessage();
@@ -686,8 +687,9 @@ void idUserInterfaceLocal::EmoteRedraw(int time) {
     float avg = Emote_getAverageHeartRate();
     
     // emotional image
-    uiManagerLocal.dc.DrawMaterial(0.f, 0.f, SCREEN_WIDTH, SCREEN_HEIGHT, emotionalImage, idVec4(1.0f, 1.0f, 1.0f, stress));
-    
+    if (stress >= 0.2f) {
+        uiManagerLocal.dc.DrawMaterial(0.f, 0.f, SCREEN_WIDTH, SCREEN_HEIGHT, emotionalImage, idVec4(1.0f, 1.0f, 1.0f, stress));
+    }
     
     // text
     sprintf(pulseStr, "HR: %d", heartRate);
@@ -708,7 +710,7 @@ void idUserInterfaceLocal::EmoteRedraw(int time) {
     
     static const float chartWidth = 100.f;
     static const float chartHeight = 50.f;
-    static float lineWidth = chartWidth / 20.f;
+    static float lineWidth = chartWidth / float(emoteHistoryLenght);
     static float topPulse = 90.f;
     static float bottomPulse = 60.f;
     
@@ -728,7 +730,7 @@ void idUserInterfaceLocal::EmoteRedraw(int time) {
     
     uiManagerLocal.dc.DrawRect(5.f, 24.f, chartWidth, chartHeight + 2.f, 1.f, idVec4(1.f, 0.f, 0.f, 1.f));
     
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < emoteHistoryLenght; i++) {
         char pulseStr[10];
         int pulse = Emote_getHistory(i);
         

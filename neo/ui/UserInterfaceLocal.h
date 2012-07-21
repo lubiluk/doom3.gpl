@@ -123,6 +123,7 @@ private:
     // emote
     bool                        emote;
     const idMaterial *          emotionalImage;
+    int                         emoteHistoryLenght;
 };
 
 class idUserInterfaceManagerLocal : public idUserInterfaceManager {
