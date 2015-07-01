@@ -651,12 +651,12 @@ void idUserInterfaceLocal::SetCursor( float x, float y ) {
 // emote
 
 void idUserInterfaceLocal::EmoteInit(void) {
-    emote = true;
     emoteHistoryLenght = 6;
     emotionalImage = declManager->FindMaterial("emote/emotional.tga");
     //emotionalImage = declManager->FindMaterial("emote/emotional.pcx");
     
     if (Emote_init() == 0) {
+		emote = true;
         common->Printf("EMOTE: Init Success\n");
         Emote_setHistoryLength(emoteHistoryLenght);
         Emote_startMonitoring();
@@ -668,23 +668,32 @@ void idUserInterfaceLocal::EmoteInit(void) {
 }
 
 void idUserInterfaceLocal::EmoteShutdown(void) {
-    Emote_stopMonitoring();
-    Emote_shutdown();
-    
-    emote = false;
-    common->Printf("EMOTE: Destroyed emote interface\n");
+	if (emote) {
+		Emote_stopMonitoring();
+		Emote_shutdown();
+
+		emote = false;
+		common->Printf("EMOTE: Destroyed emote interface\n");
+	}   
 }
 
 void idUserInterfaceLocal::EmoteRedraw(int time) {
     if (!emote) {
-        return;
+    //    return;
     }
     
     char pulseStr[255];
-    int heartRate = Emote_getHeartRate();
-    float stress = Emote_getStressLevel();
-    int reference = Emote_getReferenceHeartRate();
-    float avg = Emote_getAverageHeartRate();
+	int heartRate = 0;
+	float stress = 0.f;
+	int reference = 0;
+	float avg = 0.f;
+
+	if (emote) {
+		heartRate = Emote_getHeartRate();
+		stress = Emote_getStressLevel();
+		reference = Emote_getReferenceHeartRate();
+		avg = Emote_getAverageHeartRate();
+	}
     
     // emotional image
     if (stress >= 0.2f) {
@@ -729,6 +738,10 @@ void idUserInterfaceLocal::EmoteRedraw(int time) {
     }
     
     uiManagerLocal.dc.DrawRect(5.f, 24.f, chartWidth, chartHeight + 2.f, 1.f, idVec4(1.f, 0.f, 0.f, 1.f));
+
+	if (!emote) {
+		return;
+	}
     
     for (int i = 0; i < emoteHistoryLenght; i++) {
         char pulseStr[10];
